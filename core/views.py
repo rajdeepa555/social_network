@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from .serializers import PostSerializer, PreferenceSerializer
-from .models import Post
+from .models import Post, Preference
 from rest_framework.decorators import action
 
 
@@ -30,3 +30,11 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class AnalyticsView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        preference_records = Preference.objects.all()
+        content = {'message': 'Hello, Analytics!'}
+        return Response(content)
