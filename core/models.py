@@ -9,7 +9,7 @@ class Post(models.Model):
     content= models.TextField()
     pub_date = models.DateTimeField(auto_now_add= True)
     last_edited= models.DateTimeField(auto_now= True)
-    author= models.ForeignKey(User, on_delete=models.CASCADE)
+    author= models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         self.url= slugify(self.title)
@@ -24,7 +24,7 @@ class Preference(models.Model):
         (1, "like"), 
         (2, "unlike"), 
     ) 
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    user= models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     post= models.ForeignKey(Post, on_delete=models.CASCADE)
     action= models.IntegerField(
         choices=ACTIONS_CHOICES,
@@ -35,6 +35,3 @@ class Preference(models.Model):
     
     def __str__(self):
         return str(self.user) + ':' + str(self.post) +':' + str(self.action)
-
-    class Meta:
-       unique_together = ("user", "post", "action")
