@@ -1,4 +1,4 @@
-"""composeexample URL Configuration
+"""backend URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -15,17 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core import views
+from post import views
 from rest_framework_simplejwt import views as jwt_views
 from .router_urls import router_urlpatterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('hello/', views.HelloView.as_view(), name='hello'),
-    path('analytics/', views.AnalyticsView.as_view(), name='analytics'),
-    path('auth/', include('auth.urls')),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/admin/', admin.site.urls),
+    path('api/analytics/', views.AnalyticsView.as_view(), name='analytics'),
+    path('api/auth/', include('auth.urls')),
     path("api/", include(router_urlpatterns)),
 
 ]

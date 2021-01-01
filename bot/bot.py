@@ -73,30 +73,34 @@ def like_unlike_post(access_token, post_id, max_like, max_unlike):
         if response.status_code != 400 and response.status_code != 500:
             logging.info('Post having id- {} disliked {}/{} times'.format(post_id, i+1,N))
             i += 1
-    pass
 
 def create_a_post(access_token, max_post, max_like, max_unlike, usercount, username):
-    BACKEND_HOST, BACKEND_PORT = get_environement_var()
-    M = random.randint(1, max_post)
-    logging.info('We are going to create {} posts for user {} having username- {}'.format(M, usercount, username))
-    i=0
-    while i < M:
-        title, content = get_random_post_details()
-        post_data = {
-            'title': title,
-            'content': content
-        }
-        headers = {
-            'Authorization': 'Bearer ' + access_token
-        }
-        logging.info('\t\t\t==============================================================')
-        logging.info('We are requesting to create post {}/{} for user {} having username- {}'.format(i+1, M, usercount, username))
-        response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/api/posts/', data=post_data, headers=headers)
-        post_id = response.json()['id']
-        if response.status_code != 400 and response.status_code != 500:
-            logging.info('Post {} for user {} having username- {} created with id-{}, title-{}'.format(i+1, usercount, username, post_id, title))
-            like_unlike_post(access_token, post_id, max_like, max_unlike)
-            i += 1
+    try:
+        BACKEND_HOST, BACKEND_PORT = get_environement_var()
+        M = random.randint(1, max_post)
+        logging.info('We are going to create {} posts for user {} having username- {}'.format(M, usercount, username))
+        i=0
+        while i < M:
+            title, content = get_random_post_details()
+            post_data = {
+                'title': title,
+                'content': content
+            }
+            headers = {
+                'Authorization': 'Bearer ' + access_token
+            }
+            logging.info('\t\t\t==============================================================')
+            logging.info('We are requesting to create post {}/{} for user {} having username- {}'.format(i+1, M, usercount, username))
+            print('title: ', title, '\ncontent: ', content)
+            response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/api/posts/', data=post_data, headers=headers)
+            print(response)
+            post_id = response.json()['id']
+            if response.status_code != 400 and response.status_code != 500:
+                logging.info('Post {} for user {} having username- {} created with id-{}, title-{}'.format(i+1, usercount, username, post_id, title))
+                like_unlike_post(access_token, post_id, max_like, max_unlike)
+                i += 1
+    except Exception as e:
+        print(e)
 
 def signup_user(max_user, max_post, max_like, max_unlike):
     BACKEND_HOST, BACKEND_PORT = get_environement_var()
@@ -114,7 +118,7 @@ def signup_user(max_user, max_post, max_like, max_unlike):
         }
         logging.info('==================================================================================================')
         logging.info('We are requesting to create user {}/{}'.format(i+1, max_user))
-        response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/auth/register/', user_data)
+        response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/api/auth/register/', user_data)
         if response.status_code != 400 and response.status_code != 500:
             logging.info('User {} created with username- {}, Email- {}, Password- {}'.format(i+1, username, email, password))
             
@@ -122,10 +126,10 @@ def signup_user(max_user, max_post, max_like, max_unlike):
                 'username': username,
                 'password': password
             }
-            response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/auth/login/', login_data)
+            response = requests.post('http://' + BACKEND_HOST + ':'+ BACKEND_PORT +'/api/auth/login/', login_data)
             # refresh_token = response.json()['refresh']
             access_token = response.json()['access']
-
+            print('username: ', username, '\npassword: ', password, '\naccess_token: ', access_token)
             create_a_post(access_token, max_post, max_like, max_unlike, i+1, username)
             logging.info('==================================================================================================')
             i += 1

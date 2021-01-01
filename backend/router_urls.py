@@ -1,4 +1,4 @@
-from core.routers import router as post_router
+from post.routers import router as post_router
 
 router_urlpatterns = []
 
