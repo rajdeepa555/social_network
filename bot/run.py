@@ -3,7 +3,11 @@ import json
 import sys
 from bot import BOT
 import random
+from dotenv import load_dotenv
+import os
 
+dotenv_path="bot.env"
+load_dotenv(dotenv_path)
 
 arg_list = eval(str(sys.argv))
 with open(arg_list[1]) as file:
@@ -12,7 +16,13 @@ with open(arg_list[1]) as file:
     MAX_POST = bot_configuration['max_posts_per_user']
     MAX_LIKE_DISLIKE = bot_configuration['max_likes_dislikes_per_user']
 
-    bot = BOT()
+    bot_params = {
+        'BACKEND_SCHEME' : os.environ.get('BACKEND_SCHEME'),
+        'BACKEND_HOST' : os.environ.get('BACKEND_HOST'),
+        'BACKEND_PORT' : os.environ.get('BACKEND_PORT')
+    }
+
+    bot = BOT(**bot_params)
     for i in range(NUMBER_OF_USERS):
         username, password = bot.signup_user()
         login_data = {

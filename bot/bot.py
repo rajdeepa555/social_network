@@ -2,19 +2,20 @@ import requests
 import string 
 import random 
 import logging
-from dotenv import load_dotenv
 import os
 
 class BOT:
 
     def __init__(self, **kwargs):
-        self.BACKEND_SCHEME = "http"
-        self.BACKEND_HOST = "35.178.183.18"
-        self.BACKEND_PORT = 8000
+        self.BACKEND_SCHEME = kwargs.get("BACKEND_SCHEME")
+        self.BACKEND_HOST = kwargs.get("BACKEND_HOST")
+        self.BACKEND_PORT = kwargs.get("BACKEND_PORT")
         self.access_token = None
 
     def _get_backend_url(self,url_end_point):
-        return f"{self.BACKEND_SCHEME}://{self.BACKEND_HOST}:{self.BACKEND_PORT}{url_end_point}"
+        _url = f"{self.BACKEND_SCHEME}://{self.BACKEND_HOST}:{self.BACKEND_PORT}{url_end_point}"
+        print("_url",_url)
+        return _url
 
     def _get_random_string(self,min_len=8,max_len=20):
         return ''.join(random.choices(string.ascii_letters, k = random.randint(min_len, max_len)))
