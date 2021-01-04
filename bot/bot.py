@@ -65,7 +65,8 @@ class BOT:
     def create_a_post(self):
         fake_post = self._get_fake_post()
         response = self._make_a_request("/api/posts/",fake_post)
-        return response.json()
+        response_json = response.json()
+        return response_json.get("id"), response_json.get("title"), response_json.get("content")
 
     def take_an_action(self, post_id, action_type):
         action_data = {
